@@ -1,14 +1,25 @@
 # CommunityProjectPlanner
 
-# Community Project Copilot
+An AI assistant that helps plan community projects (trail renovations, park cleanups, coding camps, etc.) using Cloudflare Workers, Workers AI, and KV.
 
-A small Cloudflare Workers + Workers AI app for planning community service projects
-(trail renovations, park cleanups, etc.).
+### Live demo
 
-- **Backend**: Cloudflare Worker (`backend/`)
-  - `/api/chat` endpoint
-  - Uses Workers AI (Llama 3) for planning
-  - Stores per-project state in Workers KV (`PROJECTS`)
-- **Frontend**: Static HTML chat UI (`frontend/index.html`)
-  - Sends project descriptions/questions to `/api/chat`
-  - Persists a `projectId` in `localStorage` so each browser session keeps its own history
+- UI (Cloudflare Pages): https://communityprojectplanner.pages.dev/
+- Backend API (Workers): https://backend.perakalapudianurag.workers.dev/api/chat
+- Please allow 5-10 seconds after a message to wait for a response.
+
+### How it works
+
+- Frontend: simple chat UI in `frontend/index.html` that sends JSON to `/api/chat`.
+- Backend: `backend/src/index.js` (Cloudflare Worker)
+  - Reads/writes project history from Workers KV (`PROJECTS`)
+  - Calls Workers AI (`@cf/meta/llama-3-8b-instruct`) via `env.AI.run`
+  - Returns a structured reply + updated state.
+
+### Run locally
+
+```bash
+git clone https://github.com/anuragperakalapudi/CommunityProjectPlanner.git
+cd CommunityProjectPlanner/frontend
+python -m http.server 8000
+# then open http://localhost:8000
