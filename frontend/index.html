@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Community Project Copilot</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 800px;
+        margin: 20px auto;
+      }
+      .chat {
+        border: 1px solid #ddd;
+        padding: 10px;
+        height: 400px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+      }
+      .msg-user {
+        margin: 5px 0;
+      }
+      .msg-assistant {
+        margin: 5px 0;
+        background: #f5f5f5;
+        padding: 5px;
+        border-radius: 4px;
+      }
+      textarea {
+        width: 100%;
+      }
+      input {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Community Project Copilot</h1>
+
+    <label>
+      Project Title:
+      <input id="title" value="Trail Renovation" />
+    </label>
+
+    <div class="chat" id="chat"></div>
+
+    <textarea
+      id="input"
+      rows="3"
+      placeholder="Describe your project or ask a question..."
+    ></textarea>
+    <button id="send">Send</button>
+
+    <script>
+      const projectId =
+        localStorage.getItem("projectId") || crypto.randomUUID();
+      localStorage.setItem("projectId", projectId);
+
+      const API_URL =
+        "https://backend.perakalapudianurag.workers.dev/api/chat";
+
+      const chatEl = document.getElementById("chat");
+      const inputEl = document.getElementById("input");
+      const titleEl = document.getElementById("title");
+      const sendBtn = document.getElementById("send");
+
+      function addMessage(role, text) {
+        const div = document.createElement("div");
+        div.className = role === "user" ? "msg-user" : "msg-assistant";
+        div.textContent = (role === "user" ? "You: " : "Copilot: ") + text;
+        chatEl.appendChild(div);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      }
+
+      async function send() {
+        const text = inputEl.value.trim();
+        if (!text) return;
+        addMessage("user", text);
+        inputEl.value = "";
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            projectTitle: titleEl.value,
+            message: text,
+          }),
+        });
+
+        const data = await res.json();
+        addMessage("assistant", data.reply);
+      }
+
+      sendBtn.addEventListener("click", send);
+      inputEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          send();
+        }
+      });
+    </script>
+  </body>
+</html>
