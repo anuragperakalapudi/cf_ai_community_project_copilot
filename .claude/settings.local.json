@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path 'c:\\\\Users\\\\anewr\\\\OneDrive\\\\Documents\\\\GitHub\\\\cf_ai_community_project_copilot')",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "PowerShell(Get-ChildItem -Path 'c:\\\\Users\\\\anewr\\\\OneDrive\\\\Documents\\\\GitHub\\\\cf_ai_community_project_copilot' | Select-Object Name, @{Name='IsContainer'; Expression={$_.PSIsContainer}})"
+    ]
+  }
+}

@@ -5,6 +5,7 @@
   --bg-accent: #2563eb;
   --bg-accent-soft: rgba(37, 99, 235, 0.12);
   --border-subtle: rgba(148, 163, 184, 0.25);
+  --border-strong: rgba(148, 163, 184, 0.4);
   --text-main: #e5e7eb;
   --text-muted: #9ca3af;
   --text-soft: #6b7280;
@@ -97,7 +98,7 @@ body {
 .pill {
   border-radius: 999px;
   padding: 8px 16px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid var(--border-strong);
   background: radial-gradient(circle at top left, #1d4ed8, #0f172a);
   color: var(--text-main);
   font-size: 0.8rem;
@@ -114,6 +115,11 @@ body {
 .pill:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 36px rgba(15, 23, 42, 1);
+}
+
+.pill:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 .pill-ghost {
@@ -141,6 +147,7 @@ body {
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 16px;
   height: calc(100vh - 64px);
+  height: calc(100svh - 64px);
   padding: 16px 16px 20px 16px;
 }
 
@@ -149,6 +156,7 @@ body {
   flex-direction: column;
   gap: 14px;
   min-width: 0;
+  overflow-y: auto;
 }
 
 .chat-panel {
@@ -225,7 +233,7 @@ body {
 
 .chip {
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid var(--border-strong);
   background: rgba(15, 23, 42, 0.7);
   color: var(--text-muted);
   font-size: 0.72rem;
@@ -240,6 +248,11 @@ body {
   border-color: rgba(37, 99, 235, 0.7);
   color: var(--text-main);
   transform: translateY(-1px);
+}
+
+.chip:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 /* Buttons */
@@ -267,6 +280,11 @@ body {
   box-shadow: 0 18px 40px rgba(37, 99, 235, 0.85);
 }
 
+.btn:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
 .btn:disabled {
   opacity: 0.6;
   cursor: wait;
@@ -287,7 +305,7 @@ body {
 
 .btn-ghost {
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--text-muted);
   box-shadow: none;
@@ -331,13 +349,14 @@ body {
 .status-pill {
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid var(--border-strong);
   background: rgba(15, 23, 42, 0.8);
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: #cbd5e1;
+  white-space: nowrap;
 }
 
 .status-dot {
@@ -365,14 +384,45 @@ body {
   padding: 14px 14px 10px;
   overflow-y: auto;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
+}
+
+.chat-window::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat-window::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-window::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
 }
 
 .chat-window-empty {
+  height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 0 24px;
   color: var(--text-soft);
   font-size: 0.85rem;
+}
+
+.chat-window-empty p {
+  margin: 0;
+}
+
+.empty-hint {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  opacity: 0.7;
+  font-style: italic;
 }
 
 /* Messages */
@@ -387,7 +437,7 @@ body {
 }
 
 .message-bubble {
-  max-width: 80%;
+  max-width: min(80%, 680px);
   padding: 10px 12px;
   border-radius: 16px;
   font-size: 0.82rem;
@@ -421,6 +471,44 @@ body {
 .message-bubble.assistant {
   background: rgba(15, 23, 42, 0.95);
   border-color: rgba(148, 163, 184, 0.35);
+}
+
+/* Markdown content inside assistant bubbles */
+
+.message-bubble h2,
+.message-bubble h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 8px 0 4px;
+  color: var(--text-strong);
+}
+
+.message-bubble h2:first-child,
+.message-bubble h3:first-child {
+  margin-top: 0;
+}
+
+.message-bubble ul,
+.message-bubble ol {
+  padding-left: 1.2em;
+  margin: 4px 0;
+}
+
+.message-bubble li {
+  margin-bottom: 2px;
+}
+
+.message-bubble p {
+  margin: 0 0 6px;
+}
+
+.message-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.message-bubble strong {
+  color: #e5e7eb;
+  font-weight: 600;
 }
 
 /* Composer */
@@ -471,10 +559,13 @@ body {
 
   .sidebar {
     order: 2;
+    max-height: 40vh;
+    overflow-y: auto;
   }
 
   .chat-panel {
     order: 1;
-    height: calc(100vh - 64px - 16px - 16px);
+    height: calc(100vh - 64px - 32px);
+    height: calc(100svh - 64px - 32px);
   }
 }
